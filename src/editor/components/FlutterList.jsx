@@ -126,8 +126,11 @@ export default function FlutterList({ id }) {
           throttleDrag={1}
           throttleRotate={1}
           throttleResize={1}
-          onDragEnd={({ left, top }) => updateWidget(id, { x: left, y: top })}
-          onRotateEnd={({ rotate }) => updateWidget(id, { rotation: rotate })}
+          onDragEnd={({ target }) => {
+            const newX = parseFloat(target.style.left)
+            const newY = parseFloat(target.style.top)
+            updateWidget(id, { x: newX, y: newY })
+          }}           onRotateEnd={({ rotate }) => updateWidget(id, { rotation: rotate })}
           onResizeEnd={({ width, height }) => updateWidget(id, { width, height })}
         />
       )}

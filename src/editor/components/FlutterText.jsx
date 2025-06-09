@@ -52,9 +52,11 @@ export default function FlutterText({ id }) {
             ref.current.style.left = `${left}px`
             ref.current.style.top = `${top}px`
           }}
-          onDragEnd={({ left, top }) => {
-            updateWidget(id, { x: left, y: top })
-          }}
+          onDragEnd={({ target }) => {
+            const newX = parseFloat(target.style.left)
+            const newY = parseFloat(target.style.top)
+            updateWidget(id, { x: newX, y: newY })
+          }}          
           onRotate={({ transform }) => {
             ref.current.style.transform = transform
           }}

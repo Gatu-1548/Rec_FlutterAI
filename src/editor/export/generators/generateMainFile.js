@@ -1,23 +1,8 @@
-import { capitalize } from './utils.js'
-
-export function generateMainFile(screenList) {
-  // Filtrar pantallas que tengan id válido
-  const validScreens = screenList
-    .filter(id => typeof id === 'string' && id.trim().length > 0)
-
-  const routes = validScreens
-    .map(id => `'/${id}': (context) => const ${capitalize(id)}(),`)
-    .join('\n    ')
-
-  const imports = validScreens
-    .map(id => `import 'screens/${id}.dart';`)
-    .join('\n')
-
-  const initial = validScreens[0] || 'pantalla1'
-
-  return `
-import 'package:flutter/material.dart';
-${imports}
+export function generateMainFile() {
+    return `
+  import 'package:flutter/material.dart';
+import 'screens/pantalla1.dart';
+import 'screens/pantalla2.dart'; 
 
 void main() {
   runApp(const MyApp());
@@ -31,12 +16,15 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Exported App',
       debugShowCheckedModeBanner: false,
-      initialRoute: '/${initial}',
+      initialRoute: '/pantalla1', 
       routes: {
-        ${routes}
+        '/pantalla1': (context) => const Pantalla1(),
+        '/pantalla2': (context) =>const Pantalla2(),
       },
     );
   }
 }
-`
-}
+
+  `
+  }
+  

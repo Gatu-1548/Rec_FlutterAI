@@ -3,8 +3,7 @@ import WidgetPanel from '../editor/frames/WidgetPanel'
 import ScreenTabs from '../editor/frames/ScreenTabs'
 import CanvasPhone from '../editor/canvas/CanvasPhone'
 import RightPanel from '../editor/frames/RightPanel'
-import { exportToFlutterCode } from '../editor/export/flutterExporter' // ✅ Correcto
-
+import { exportToFlutterCode } from '../editor/export/flutterExporter' 
 export default function MyEditor() {
   const [currentScreen, setCurrentScreen] = useState('pantalla1')
 
