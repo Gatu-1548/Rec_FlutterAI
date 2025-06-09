@@ -32,12 +32,14 @@ class ${className} extends StatelessWidget {
     return Scaffold(
       ${appBarWidget ? `appBar: ${generateAppBar(appBarWidget)},` : ''}
       body: SafeArea(
+        top: ${appBarWidget ? 'false' : 'true'},
         child: Stack(
-          children: [
+            children: [
             ${positionedWidgets}
-          ],
+            ],
         ),
-      ),
+        ),
+
       ${bottomNavWidget ? `bottomNavigationBar: ${generateBottomNav(bottomNavWidget)},` : ''}
     );
   }

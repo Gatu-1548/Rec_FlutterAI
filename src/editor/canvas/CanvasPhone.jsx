@@ -10,10 +10,12 @@ import FlutterList from '../components/FlutterList'
 import FlutterForm from '../components/FlutterForm'
 import FlutterAppBar from '../components/FlutterAppBar'
 import FlutterBottomNav from '../components/FlutterBottomNav'
+import { useCanvasStore } from '../store/useCanvasStore'
 
 export default function CanvasPhone({ screenId }) {
   const widgets = useWidgetStore((state) => state.widgets[screenId] || [])
   const setSelectedId = useWidgetStore((state) => state.setSelectedId)
+  const { width, height } = useCanvasStore((state) => state.canvasSize)
 
   const handleCanvasClick = (e) => {
     if (e.target === e.currentTarget) {
@@ -26,15 +28,14 @@ export default function CanvasPhone({ screenId }) {
       <div
         className="relative border-4 border-black rounded-3xl bg-white shadow-lg overflow-hidden"
         style={{
-          width: 350,
-          height: 750,
+          width,
+          height,
           transform: 'scale(0.65)',
           transformOrigin: 'top left',
-         
+          marginTop: '40px'
         }}
         onClick={handleCanvasClick}
-          >
-    
+      >
         {widgets.map((widget) => {
           if (widget.type === 'text') return <FlutterText key={widget.id} id={widget.id} />
           if (widget.type === 'button') return <FlutterButton key={widget.id} id={widget.id} />
