@@ -9,26 +9,32 @@ import FlutterCheckbox from '../components/FlutterCheckbox'
 import FlutterList from '../components/FlutterList'
 import FlutterForm from '../components/FlutterForm'
 import FlutterAppBar from '../components/FlutterAppBar'
-import FlutterBottomNav from '../components/FlutterBottomNav'   
+import FlutterBottomNav from '../components/FlutterBottomNav'
 
 export default function CanvasPhone({ screenId }) {
   const widgets = useWidgetStore((state) => state.widgets[screenId] || [])
   const setSelectedId = useWidgetStore((state) => state.setSelectedId)
 
   const handleCanvasClick = (e) => {
-    // Verifica si el click fue directamente en el contenedor (no en un widget)
     if (e.target === e.currentTarget) {
       setSelectedId(null)
     }
   }
 
   return (
-    <div className="flex justify-center items-center flex-1 bg-gray-100">
+    <div className="flex justify-center items-start flex-1 bg-gray-100 overflow-auto">
       <div
         className="relative border-4 border-black rounded-3xl bg-white shadow-lg overflow-hidden"
-        style={{ width: 290, height: 584 }}
+        style={{
+          width: 350,
+          height: 750,
+          transform: 'scale(0.65)',
+          transformOrigin: 'top left',
+         
+        }}
         onClick={handleCanvasClick}
-      >
+          >
+    
         {widgets.map((widget) => {
           if (widget.type === 'text') return <FlutterText key={widget.id} id={widget.id} />
           if (widget.type === 'button') return <FlutterButton key={widget.id} id={widget.id} />
@@ -36,11 +42,11 @@ export default function CanvasPhone({ screenId }) {
           if (widget.type === 'container') return <FlutterContainer key={widget.id} id={widget.id} />
           if (widget.type === 'input') return <FlutterInput key={widget.id} id={widget.id} />
           if (widget.type === 'checkbox') return <FlutterCheckbox key={widget.id} id={widget.id} />
-          if (widget.type === 'list') return <FlutterList key={widget.id} id={widget.id} /> 
+          if (widget.type === 'list') return <FlutterList key={widget.id} id={widget.id} />
           if (widget.type === 'form') return <FlutterForm key={widget.id} id={widget.id} />
           if (widget.type === 'appbar') return <FlutterAppBar key={widget.id} id={widget.id} />
-          if (widget.type === 'bottomnav') return <FlutterBottomNav key={widget.id} id={widget.id} />     
-            return null
+          if (widget.type === 'bottomnav') return <FlutterBottomNav key={widget.id} id={widget.id} />
+          return null
         })}
       </div>
     </div>

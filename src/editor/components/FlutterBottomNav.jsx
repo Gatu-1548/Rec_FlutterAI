@@ -95,12 +95,14 @@ export default function FlutterBottomNav({ id }) {
           throttleRotate={1}
           throttleResize={1}
           onDrag={({ left, top }) => {
-            ref.current.style.left = `${left}px`;
-            ref.current.style.top = `${top}px`;
+            ref.current.style.left = `${left}px`
+            ref.current.style.top = `${top}px`
           }}
-          onDragEnd={({ left, top }) => {
-            updateWidget(id, { x: left, y: top });
-          }}
+          onDragEnd={({ target }) => {
+            const newX = parseFloat(target.style.left)
+            const newY = parseFloat(target.style.top)
+            updateWidget(id, { x: newX, y: newY })
+          }}  
           onRotate={({ transform }) => {
             ref.current.style.transform = transform;
           }}

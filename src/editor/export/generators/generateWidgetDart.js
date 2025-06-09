@@ -1,5 +1,5 @@
 /* eslint-disable no-case-declarations */
-// 📁 src/editor/export/generators/generateWidgetDart.js
+// src/editor/export/generators/generateWidgetDart.js
 
 export function generateWidgetDart(widget) {
     const x = widget.x ?? 0;
