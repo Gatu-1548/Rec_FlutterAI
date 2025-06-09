@@ -1,4 +1,4 @@
-// 📁 src/editor/export/generators/generatePubspec.js
+// src/editor/export/generators/generatePubspec.js
 export function generatePubspecYaml(projectName = 'flutter_project_exportado') {
     return `
   name: ${projectName}

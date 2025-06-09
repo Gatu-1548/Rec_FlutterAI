@@ -1,4 +1,4 @@
-// 📁 src/editor/export/generators/generateScreenFile.js
+// src/editor/export/generators/generateScreenFile.js
 import { generateWidgetDart } from './generateWidgetDart.js'
 
 export function generateScreenFile(screenId, widgets) {
@@ -9,10 +9,17 @@ export function generateScreenFile(screenId, widgets) {
   const bottomNavWidget = widgets.find(w => w.type === 'bottomnav')
 
   // Resto de widgets en Stack
-  const positionedWidgets = widgets
-    .filter(w => w.type !== 'appbar' && w.type !== 'bottomnav')
-    .map(generateWidgetDart)
-    .join(',\n          ')
+  const hasAppBar = !!appBarWidget
+const offsetY = hasAppBar ? 72 : 0 
+
+const positionedWidgets = widgets
+  .filter(w => w.type !== 'appbar' && w.type !== 'bottomnav')
+  .map(w => {
+    const adjusted = { ...w, y: (w.y ?? 0) - offsetY }
+    return generateWidgetDart(adjusted)
+  })
+  .join(',\n          ')
+
 
   return `
 import 'package:flutter/material.dart';
@@ -24,11 +31,15 @@ class ${className} extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       ${appBarWidget ? `appBar: ${generateAppBar(appBarWidget)},` : ''}
-      body: Stack(
-        children: [
-          ${positionedWidgets}
-        ],
-      ),
+      body: SafeArea(
+        top: ${appBarWidget ? 'false' : 'true'},
+        child: Stack(
+            children: [
+            ${positionedWidgets}
+            ],
+        ),
+        ),
+
       ${bottomNavWidget ? `bottomNavigationBar: ${generateBottomNav(bottomNavWidget)},` : ''}
     );
   }
@@ -36,7 +47,7 @@ class ${className} extends StatelessWidget {
 `
 }
 
-// 🎯 AppBar generator
+// AppBar generator
 function generateAppBar(widget) {
   const bg = toColor(widget.backgroundColor || '#3b82f6')
   const fg = toColor(widget.textColor || '#ffffff')
@@ -50,7 +61,7 @@ function generateAppBar(widget) {
       )`
 }
 
-// 🎯 BottomNavigationBar generator
+// BottomNavigationBar generator
 function generateBottomNav(widget) {
   const active = toColor(widget.activeColor || '#3b82f6')
   const inactive = toColor(widget.inactiveColor || '#6b7280')
@@ -68,11 +79,10 @@ function generateBottomNav(widget) {
           BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Ajustes'),
         ],
         onTap: (index) {
-          // TODO: agregar navegación si deseas
+          // Todo:agregar navegación si deseas
         },
       )`
 }
-
 
 function toColor(hex) {
   return `Color(0xFF${hex.replace('#', '')})`

@@ -1,5 +1,5 @@
 /* eslint-disable no-case-declarations */
-// 📁 src/editor/export/generators/generateWidgetDart.js
+// src/editor/export/generators/generateWidgetDart.js
 
 export function generateWidgetDart(widget) {
     const x = widget.x ?? 0;
@@ -31,7 +31,7 @@ export function generateWidgetDart(widget) {
   
       case 'button':
         return `Positioned(
-          left: ${x}, top: ${y},${transform}
+          left: ${widget.x || 0}, top: ${widget.y || 0},
           child: ElevatedButton(
             onPressed: () {},
             style: ElevatedButton.styleFrom(
