@@ -7,7 +7,8 @@ import OcradReader from '../convert/OcradReader';
 import MyCanvas from '../figma/MyEditor';
 import DiagramViewer from '../Diagram/DiagramViewer';
 import CreateRoomModal from '../figma/CreateRoomModal'; // Asegúrate de importar tu modal
-
+import GeminiImageUI from '../GenerativeIA/GeminiImageUI';
+import GeminiPromptUI from '../GenerativeIA/GeminiPromptUI';
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState('imagen');
   const [isWorkingAlone, setIsWorkingAlone] = useState(false);
@@ -101,7 +102,7 @@ const Dashboard = () => {
       <div className="mt-4 text-white/90">
         {activeTab === 'imagen' && (
           <div className="text-center py-8">
-            <OcradReader />
+            <GeminiImageUI />
           </div>
         )}
 
@@ -142,7 +143,7 @@ const Dashboard = () => {
 
         {activeTab === 'uml' && (
           <div className="text-center py-8">
-            <DiagramViewer />
+            <GeminiPromptUI />
           </div>
         )}
       </div>

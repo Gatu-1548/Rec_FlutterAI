@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'https://backenddesing-production.up.railway.app/api/';
+const API_URL = 'http://localhost:5000/api/';
 
 // Login
 export const loginUser = async (email, password) => {
@@ -90,3 +90,33 @@ export const deleteRole = async (id) => {
   });
   return response.data;
 };
+
+//---------------apisIA----------------------
+export const generateUIFromImage = async (file) => {
+  const formData = new FormData();
+  formData.append('mode', 'image');
+  formData.append('file', file); // file: File object desde input
+
+  try {
+    const response = await axios.post(`${API_URL}generate-ui`, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    return response.data.code; // .code contiene el JSON generado
+  } catch (error) {
+    throw error.response?.data || error.message;
+  }
+};
+
+
+export const generateUIFromPrompt = async (prompt) => {
+  try {
+    const response = await axios.post(`${API_URL}generate-ui`, {
+      mode: 'prompt',
+      data: prompt,
+    });
+    return response.data.code;
+  } catch (error) {
+    throw error.response?.data || error.message;
+  }
+};
+
