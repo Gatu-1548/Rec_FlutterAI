@@ -1,12 +1,13 @@
 import axios from 'axios';
 
-const API_URL = 'https://backenddesing-production.up.railway.app/api/';
+const API_URL = 'http://localhost:5000/api/';
 
 // Login
 export const loginUser = async (email, password) => {
   try {
     const response = await axios.post(`${API_URL}users/login`, { email, password });
     return response.data;
+  // eslint-disable-next-line no-unused-vars
   } catch (error) {
     throw new Error('Error de login');
   }
@@ -23,6 +24,7 @@ export const registerUser = async (firstName, lastName, email, gender, password)
       password,
     });
     return response.data;
+  // eslint-disable-next-line no-unused-vars
   } catch (error) {
     throw new Error('Error en el registro');
   }
