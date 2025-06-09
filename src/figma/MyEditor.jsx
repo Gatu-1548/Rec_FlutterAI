@@ -1,13 +1,14 @@
-import React, { useState } from 'react'
+import React from 'react'
 import WidgetPanel from '../editor/frames/WidgetPanel'
 import ScreenTabs from '../editor/frames/ScreenTabs'
 import CanvasPhone from '../editor/canvas/CanvasPhone'
 import RightPanel from '../editor/frames/RightPanel'
 import { exportToFlutterCode } from '../editor/export/flutterExporter'
 import { useCanvasStore } from '../editor/store/useCanvasStore'
+import { useWidgetStore } from '../editor/store/useWidgetStore'
 
 export default function MyEditor() {
-  const [currentScreen, setCurrentScreen] = useState('pantalla1')
+  const currentScreen = useWidgetStore((state) => state.currentScreen)
   const setCanvasSize = useCanvasStore((state) => state.setCanvasSize)
 
   const screenList = [
@@ -20,7 +21,7 @@ export default function MyEditor() {
       {/* Top bar con tabs y controles */}
       <div className="flex flex-wrap justify-between items-center px-4 py-3 bg-[#0f172a] border-b border-[#53eafd33] shadow-md">
         <div className="flex flex-wrap items-center gap-4">
-          <ScreenTabs {...{ currentScreen, setCurrentScreen, screenList }} />
+          <ScreenTabs screenList={screenList} />
 
           {/* Selector de tamaño */}
           <div className="relative">

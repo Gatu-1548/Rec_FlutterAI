@@ -15,6 +15,7 @@ import {
 
 export default function WidgetPanel() {
   const addWidget = useWidgetStore((state) => state.addWidget)
+  const currentScreen = useWidgetStore((state) => state.currentScreen)
 
   const widgetIcons = {
     text: <TextCursorInput size={26} />,
@@ -46,7 +47,7 @@ export default function WidgetPanel() {
         {Object.entries(widgetIcons).map(([type, icon]) => (
           <button
             key={type}
-            onClick={() => addWidget(type)}
+            onClick={() => addWidget(type, currentScreen)}
             className="bg-[#1e293b] hover:bg-[#1f2d41] text-white border border-[#53eafd33]
                       rounded-xl 
                       p-2 lg:p-4

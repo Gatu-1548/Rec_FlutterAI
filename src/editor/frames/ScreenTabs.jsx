@@ -1,6 +1,10 @@
 import React from 'react'
+import { useWidgetStore } from '../store/useWidgetStore'
 
-export default function ScreenTabs({ currentScreen, setCurrentScreen, screenList }) {
+export default function ScreenTabs({ screenList }) {
+  const currentScreen = useWidgetStore((state) => state.currentScreen)
+  const setCurrentScreen = useWidgetStore((state) => state.setCurrentScreen)
+
   return (
     <div className="flex flex-wrap gap-2 px-4 py-3 bg-[#0f172a] border-b border-[#53eafd33] shadow-md justify-center lg:justify-start">
       {screenList.map((screen) => (

@@ -12,9 +12,10 @@ export const useWidgetStore = create((set) => ({
   setCurrentScreen: (screenId) => set({ currentScreen: screenId }),
   setSelectedId: (id) => set({ selectedId: id }),
 
-  addWidget: (type) =>
+  addWidget: (type, screenId) =>
     set((state) => {
       const id = nanoid()
+      const screen = screenId || state.currentScreen
 
       const typeDefaults = {
         text: {
@@ -113,12 +114,7 @@ export const useWidgetStore = create((set) => ({
         id,
         type,
         x: type === 'appbar' ? 0 : 20,
-        y: type === 'appbar'
-        ? 0
-        : type === 'bottomnav'
-        ? 584 - 92
-        : 70,
-
+        y: type === 'appbar' ? 0 : type === 'bottomnav' ? 584 - 92 : 70,
         rotation: 0,
         ...typeDefaults[type],
       }
@@ -126,20 +122,22 @@ export const useWidgetStore = create((set) => ({
       return {
         widgets: {
           ...state.widgets,
-          [state.currentScreen]: [...state.widgets[state.currentScreen], newWidget],
+          [screen]: [...(state.widgets[screen] || []), newWidget],
         },
+        selectedId: id,
       }
     }),
 
   updateWidget: (id, changes) =>
     set((state) => {
-      const updatedList = state.widgets[state.currentScreen].map((w) =>
+      const screen = state.currentScreen
+      const updatedList = state.widgets[screen].map((w) =>
         w.id === id ? { ...w, ...changes } : w
       )
       return {
         widgets: {
           ...state.widgets,
-          [state.currentScreen]: updatedList,
+          [screen]: updatedList,
         },
       }
     }),
@@ -147,7 +145,6 @@ export const useWidgetStore = create((set) => ({
   updateSelectedWidget: (changes) =>
     set((state) => {
       if (!state.selectedId) return state
-
       const screen = state.currentScreen
       const updatedList = state.widgets[screen].map((w) =>
         w.id === state.selectedId ? { ...w, ...changes } : w
@@ -159,15 +156,16 @@ export const useWidgetStore = create((set) => ({
         },
       }
     }),
-    removeWidget: (id) =>
-        set((state) => {
-          const screen = state.currentScreen
-          const updatedList = state.widgets[screen].filter((w) => w.id !== id)
-          return {
-            widgets: {
-              ...state.widgets,
-              [screen]: updatedList,
-            },
-          }
-        }),
-    }))
+
+  removeWidget: (id) =>
+    set((state) => {
+      const screen = state.currentScreen
+      const updatedList = state.widgets[screen].filter((w) => w.id !== id)
+      return {
+        widgets: {
+          ...state.widgets,
+          [screen]: updatedList,
+        },
+      }
+    }),
+}))
