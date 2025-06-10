@@ -181,4 +181,12 @@ export const useWidgetStore = create((set) => ({
         },
       }
     }),
+
+    loadWidgets: (newWidgetsByScreen) =>
+  set((state) => ({
+    widgets: {
+      ...state.widgets,
+      ...newWidgetsByScreen,
+    },
+  })),
 }))
