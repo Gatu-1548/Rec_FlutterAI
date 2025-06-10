@@ -11,6 +11,15 @@ import FlutterForm from '../components/FlutterForm'
 import FlutterAppBar from '../components/FlutterAppBar'
 import FlutterBottomNav from '../components/FlutterBottomNav'
 import { useCanvasStore } from '../store/useCanvasStore'
+import FlutterCalendar from '../components/FlutterCalendar'
+import FlutterCard from '../components/FlutterCard'
+import FlutterDropdown from '../components/FlutterDropdown'
+import FlutterPanel from '../components/FlutterPanel'
+import FlutterRadio from '../components/FlutterRadio'
+import FlutterSwitch from '../components/FlutterSwitch'
+import FlutterSlider from '../components/FlutterSlider'
+import FlutterTabs from '../components/FlutterTabs'
+import FlutterDrawer from '../components/FlutterDrawer'
 
 export default function CanvasPhone({ screenId }) {
   const widgets = useWidgetStore((state) => state.widgets[screenId] || [])
@@ -50,6 +59,16 @@ export default function CanvasPhone({ screenId }) {
             if (widget.type === 'form') return <FlutterForm key={widget.id} id={widget.id} />
             if (widget.type === 'appbar') return <FlutterAppBar key={widget.id} id={widget.id} />
             if (widget.type === 'bottomnav') return <FlutterBottomNav key={widget.id} id={widget.id} />
+            if (widget.type === 'calendar') return <FlutterCalendar key={widget.id} id={widget.id} />
+            if (widget.type === 'card') return <FlutterCard key={widget.id} id={widget.id} />
+            if (widget.type === 'dropdown') return <FlutterDropdown key={widget.id} id={widget.id} />
+            if (widget.type === 'panel') return <FlutterPanel key={widget.id} id={widget.id} />
+            if (widget.type === 'radio') return <FlutterRadio key={widget.id} id={widget.id} />
+            if (widget.type === 'switch') return <FlutterSwitch key={widget.id} id={widget.id} />
+            if (widget.type === 'slider') return <FlutterSlider key={widget.id} id={widget.id} />
+            if (widget.type === 'tabs') return <FlutterTabs key={widget.id} id={widget.id} />
+            if (widget.type === 'drawer') return <FlutterDrawer key={widget.id} id={widget.id} />
+
             return null
           })}
         </div>

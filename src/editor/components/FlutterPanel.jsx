@@ -1,8 +1,9 @@
+/* eslint-disable no-unused-vars */
 import React, { useRef, useEffect, useState } from 'react'
 import Moveable from 'react-moveable'
 import { useWidgetStore } from '../store/useWidgetStore'
 
-export default function FlutterCheckbox({ id }) {
+export default function FlutterPanel({ id }) {
   const widget = useWidgetStore((state) =>
     state.widgets[state.currentScreen].find((w) => w.id === id)
   )
@@ -20,33 +21,52 @@ export default function FlutterCheckbox({ id }) {
   if (!widget) return null
 
   const isSelected = selectedId === id
+  const scrollable = widget.scrollable ?? true
 
   return (
     <>
       <div
         ref={ref}
-        className="absolute flex items-center gap-2 cursor-pointer"
+        className="absolute overflow-hidden"
         style={{
+          width: widget.width || 260,
+          height: widget.height || 180,
+          backgroundColor: widget.backgroundColor || '#f9fafb',
+          border: widget.border ? '1px solid #cbd5e1' : 'none',
+          borderRadius: `${widget.borderRadius || 8}px`,
           left: `${widget.x}px`,
           top: `${widget.y}px`,
+          overflowY: scrollable ? 'scroll' : 'hidden',
+          padding: '8px',
           transform: `rotate(${widget.rotation || 0}deg)`,
-          outline: isSelected ? '1px dashed #999' : 'none'
+          outline: isSelected ? '1px dashed #ccc' : 'none',
         }}
         onClick={(e) => {
           e.stopPropagation()
           setSelectedId(id)
         }}
       >
-        <input type="checkbox" checked={widget.checked || false} readOnly />
-        <span>{widget.text || 'Opción'}</span>
+        <div className="text-sm text-gray-700">Panel de contenido</div>
+        <div className="text-xs text-gray-500 mt-2">
+          Aquí podrías colocar otros widgets o texto de prueba...
+        </div>
+        <div style={{ height: scrollable ? 200 : 0 }}></div>
       </div>
 
       {isSelected && target && (
         <Moveable
           target={target}
           draggable
-          rotatable
-          
+                  rotatable
+                  resizable
+            onResize={({ width, height }) => {
+            ref.current.style.width = `${width}px`
+            ref.current.style.height = `${height}px`
+            }}
+            onResizeEnd={({ width, height }) => {
+            updateWidget(id, { width, height })
+            }}
+
           onDrag={({ left, top }) => {
             ref.current.style.left = `${left}px`
             ref.current.style.top = `${top}px`
@@ -55,10 +75,13 @@ export default function FlutterCheckbox({ id }) {
             const newX = parseFloat(target.style.left)
             const newY = parseFloat(target.style.top)
             updateWidget(id, { x: newX, y: newY })
-          }} onRotate={({ transform }) => {
+          }}
+          onRotate={({ transform }) => {
             ref.current.style.transform = transform
           }}
-          onRotateEnd={({ rotate }) => updateWidget(id, { rotation: rotate })}
+          onRotateEnd={({ target, rotate }) => {
+            updateWidget(id, { rotation: rotate })
+          }}
         />
       )}
     </>
