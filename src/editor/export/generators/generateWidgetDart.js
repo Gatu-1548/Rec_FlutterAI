@@ -221,6 +221,25 @@ export function generateWidgetDart(widget) {
           backgroundColor: ${toColor(widget.backgroundColor)},
           showUnselectedLabels: ${widget.showLabels !== false},
         )`;
+
+        case 'dropdown':
+  return `Positioned(
+    left: ${widget.x}, top: ${widget.y},
+    child: SizedBox(
+      width: ${widget.width || 250},
+      child: DropdownButtonFormField<String>(
+        value: '${widget.items?.[0] || ''}',
+        items: ${JSON.stringify(widget.items || ['Opción 1'])}.map((item) {
+          return DropdownMenuItem(value: item, child: Text(item));
+        }).toList(),
+        onChanged: (value) {},
+        decoration: InputDecoration(
+          labelText: '${widget.label || 'Seleccione'}',
+          border: OutlineInputBorder(),
+        ),
+      ),
+    ),
+  )`;
   
       default:
         return `// Widget type '${widget.type}' not implemented yet`;
