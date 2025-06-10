@@ -24,6 +24,7 @@ export const useWidgetStore = create((set) => ({
           fontSize: 16,
           width: 120,
           height: 40,
+          navigateTo: '', 
         },
         button: {
           text: 'Botón',
@@ -33,6 +34,7 @@ export const useWidgetStore = create((set) => ({
           width: 100,
           height: 40,
           borderRadius: 6,
+          navigateTo: '', 
         },
         container: {
           color: '#f3f4f6',
@@ -40,11 +42,13 @@ export const useWidgetStore = create((set) => ({
           height: 150,
           borderRadius: 8,
           shadow: true,
+          navigateTo: '', 
         },
         image: {
           src: 'https://via.placeholder.com/150',
           width: 100,
           height: 100,
+          navigateTo: '', 
         },
         input: {
           placeholder: 'Escribe aquí',
@@ -56,6 +60,7 @@ export const useWidgetStore = create((set) => ({
           paddingHorizontal: 10,
           paddingVertical: 8,
           border: true,
+          navigateTo: '', 
         },
         checkbox: {
           text: 'Opción',
@@ -63,6 +68,7 @@ export const useWidgetStore = create((set) => ({
           color: '#3b82f6',
           fontSize: 14,
           textColor: '#000000',
+          navigateTo: '', 
         },
         list: {
           items: ['Item 1', 'Item 2', 'Item 3'],
@@ -71,6 +77,7 @@ export const useWidgetStore = create((set) => ({
           fontSize: 14,
           width: 200,
           height: 'auto',
+          navigateTo: '', 
         },
         form: {
           width: 300,
@@ -80,6 +87,7 @@ export const useWidgetStore = create((set) => ({
           buttonColor: '#3b82f6',
           buttonTextColor: '#ffffff',
           buttonText: 'Enviar',
+          navigateTo: '', 
         },
         appbar: {
           text: 'Mi Aplicación',
@@ -92,6 +100,7 @@ export const useWidgetStore = create((set) => ({
           showActions: true,
           elevation: true,
           width: '100%',
+          navigateTo: '', 
         },
         bottomnav: {
           width: 320,
@@ -107,6 +116,7 @@ export const useWidgetStore = create((set) => ({
           fabIconColor: '#ffffff',
           defaultActive: 0,
           customItems: null,
+          navigateTo: '', 
         },
       }
 

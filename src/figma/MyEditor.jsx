@@ -58,7 +58,8 @@ export default function MyEditor() {
           <CanvasPhone screenId={currentScreen} />
         </div>
   
-        <RightPanel />
+        <RightPanel screenList={screenList} />
+
       </div>
     </div>
   )

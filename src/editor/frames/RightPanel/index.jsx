@@ -8,15 +8,15 @@ import TextControls from './WidgetControls/TextControls'
 import { ButtonControls } from './WidgetControls/ButtonControls'
 import ImageControls from './WidgetControls/ImageControls'
 import { ContainerControls } from './WidgetControls/ContainerControls'
-import  InputControls from './WidgetControls/InputControls'
+import InputControls from './WidgetControls/InputControls'
 import { CheckboxControls } from './WidgetControls/CheckboxControls'
 import ListControls from './WidgetControls/ListControls'
 import FormControls from './WidgetControls/FormControls'
 import { AppbarControls } from './WidgetControls/AppbarControls'
-import { BottomnavControls} from './WidgetControls/BottomnavControls'
+import { BottomnavControls } from './WidgetControls/BottomnavControls'
 import { PanelRightClose, PanelRightOpen, ChevronLeft } from 'lucide-react'
 
-export default function RightPanel() {
+export default function RightPanel({ screenList = [] }) {
   const selectedId = useWidgetStore((s) => s.selectedId)
   const currentScreen = useWidgetStore((s) => s.currentScreen)
   const widget = useWidgetStore((s) =>
@@ -70,7 +70,6 @@ export default function RightPanel() {
         ${!panelOpen && isMobile ? 'translate-x-full w-0 overflow-hidden' : ''}
       `}
     >
-      {/* Enhanced close button for mobile */}
       {isMobile && panelOpen && (
         <button
           onClick={togglePanel}
@@ -85,7 +84,7 @@ export default function RightPanel() {
       <div className="p-4">
         <WidgetHeader widgetType={widget?.type} onDelete={handleDeleteWidget} />
         <div className="space-y-4 mt-6">
-          <CommonControls widget={widget} updateWidget={updateSelectedWidget} />
+          <CommonControls widget={widget} updateWidget={updateSelectedWidget} screenList={screenList} />
           {widget?.type === 'text' && <TextControls widget={widget} updateWidget={updateSelectedWidget} />}
           {widget?.type === 'button' && <ButtonControls widget={widget} updateWidget={updateSelectedWidget} />}
           {widget?.type === 'image' && <ImageControls widget={widget} updateWidget={updateSelectedWidget} />}
@@ -105,10 +104,12 @@ export default function RightPanel() {
     return (
       <>
         {FloatingButton}
-        <div className={`
-          h-full bg-gradient-to-b from-[#1B273A] to-[#0F172A] shadow-xl z-30 transition-all duration-300 ease-in-out
-          ${isMobile ? (panelOpen ? 'w-64 fixed right-0 top-0 h-screen' : 'w-0 overflow-hidden') : 'w-64 relative'}
-        `}>
+        <div
+          className={`
+            h-full bg-gradient-to-b from-[#1B273A] to-[#0F172A] shadow-xl z-30 transition-all duration-300 ease-in-out
+            ${isMobile ? (panelOpen ? 'w-64 fixed right-0 top-0 h-screen' : 'w-0 overflow-hidden') : 'w-64 relative'}
+          `}
+        >
           {isMobile && panelOpen && (
             <button
               onClick={togglePanel}
