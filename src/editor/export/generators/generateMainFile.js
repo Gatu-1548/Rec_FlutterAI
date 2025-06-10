@@ -1,30 +1,24 @@
-export function generateMainFile() {
-    return `
-  import 'package:flutter/material.dart';
-import 'screens/pantalla1.dart';
-import 'screens/pantalla2.dart'; 
+import { capitalize } from './utils.js';
 
-void main() {
-  runApp(const MyApp());
-}
+export function generateMainFile(screenList) {
+  //const imports = screenList.map(s => `import 'screens/${s.id}.dart';`).join('\n')
+  const firstScreen = screenList[0]?.id || 'pantalla1'
+  const imports = `import 'screens/${firstScreen}.dart';`
+
+  return `
+import 'package:flutter/material.dart';
+${imports}
+
+void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Exported App',
-      debugShowCheckedModeBanner: false,
-      initialRoute: '/pantalla1', 
-      routes: {
-        '/pantalla1': (context) => const Pantalla1(),
-        '/pantalla2': (context) =>const Pantalla2(),
-      },
+      title: 'Proyecto Exportado',
+      home: ${capitalize(screenList[0]?.id) ?? 'Pantalla1'}(),
     );
   }
 }
-
-  `
-  }
-  
+`
+}
