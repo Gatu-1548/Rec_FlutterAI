@@ -41,9 +41,7 @@ export default function WidgetPanel() {
         <span className="bg-[#53EAFD]/10 p-2 rounded-lg"></span>
         Widget Library
       </div>
-
-      {/* Lista de widgets */}
-      <div className="grid lg:grid-cols-2 grid-cols-1 gap-4 w-full">
+      <div className="grid lg:grid-cols-2 grid-cols-1 gap-2 w-full">
         {Object.entries(widgetIcons).map(([type, icon]) => (
           <button
             key={type}
