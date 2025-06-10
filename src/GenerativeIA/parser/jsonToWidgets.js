@@ -19,7 +19,7 @@ export function parseGeminiJsonToWidgets(geminiJson) {
           placeholder: item.label || 'Campo',
           width: 250,
         };
-
+ 
       case 'dropdown':
        return {
           id: crypto.randomUUID(),
