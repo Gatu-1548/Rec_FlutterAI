@@ -1,8 +1,9 @@
+/* eslint-disable no-unused-vars */
 import React, { useRef, useEffect, useState } from 'react'
 import Moveable from 'react-moveable'
 import { useWidgetStore } from '../store/useWidgetStore'
 
-export default function FlutterCheckbox({ id }) {
+export default function FlutterSwitch({ id }) {
   const widget = useWidgetStore((state) =>
     state.widgets[state.currentScreen].find((w) => w.id === id)
   )
@@ -21,32 +22,51 @@ export default function FlutterCheckbox({ id }) {
 
   const isSelected = selectedId === id
 
+  const handleToggle = () => {
+    updateWidget(id, { checked: !widget.checked })
+  }
+
   return (
     <>
       <div
         ref={ref}
-        className="absolute flex items-center gap-2 cursor-pointer"
+        className="absolute cursor-pointer flex items-center gap-2"
         style={{
           left: `${widget.x}px`,
           top: `${widget.y}px`,
           transform: `rotate(${widget.rotation || 0}deg)`,
-          outline: isSelected ? '1px dashed #999' : 'none'
+          outline: isSelected ? '1px dashed #ccc' : 'none',
         }}
         onClick={(e) => {
           e.stopPropagation()
           setSelectedId(id)
         }}
       >
-        <input type="checkbox" checked={widget.checked || false} readOnly />
-        <span>{widget.text || 'Opción'}</span>
+        <label className="flex items-center gap-2">
+          <input
+            type="checkbox"
+            checked={widget.checked ?? false}
+            onChange={handleToggle}
+            className="w-5 h-5 accent-blue-500"
+          />
+          <span className="text-sm text-gray-800">Switch</span>
+        </label>
       </div>
 
       {isSelected && target && (
         <Moveable
           target={target}
           draggable
-          rotatable
-          
+        rotatable
+        resizable
+        onResize={({ width, height }) => {
+        ref.current.style.width = `${width}px`
+        ref.current.style.height = `${height}px`
+        }}
+        onResizeEnd={({ width, height }) => {
+        updateWidget(id, { width, height })
+        }}
+
           onDrag={({ left, top }) => {
             ref.current.style.left = `${left}px`
             ref.current.style.top = `${top}px`
@@ -55,10 +75,13 @@ export default function FlutterCheckbox({ id }) {
             const newX = parseFloat(target.style.left)
             const newY = parseFloat(target.style.top)
             updateWidget(id, { x: newX, y: newY })
-          }} onRotate={({ transform }) => {
+          }}
+          onRotate={({ transform }) => {
             ref.current.style.transform = transform
           }}
-          onRotateEnd={({ rotate }) => updateWidget(id, { rotation: rotate })}
+          onRotateEnd={({ target, rotate }) => {
+            updateWidget(id, { rotation: rotate })
+          }}
         />
       )}
     </>

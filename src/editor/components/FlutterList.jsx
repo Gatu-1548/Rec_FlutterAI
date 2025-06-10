@@ -59,8 +59,9 @@ export default function FlutterList({ id }) {
           border: isSelected ? '2px dashed #2563eb' : '1px solid #e5e7eb',
           minWidth: '150px',
           minHeight: '100px',
-          width: widget.width || 'auto',
-          height: widget.height || 'auto',
+          width: `${widget.width || 200}px`,
+          height: `${widget.height || 120}px`,
+
           backgroundColor: widget.backgroundColor || '#ffffff',
         }}
         onClick={(e) => {
@@ -126,6 +127,11 @@ export default function FlutterList({ id }) {
           throttleDrag={1}
           throttleRotate={1}
           throttleResize={1}
+          onResize={({ width, height }) => {
+            ref.current.style.width = `${width}px`
+            ref.current.style.height = `${height}px`
+          }}
+          
           onDragEnd={({ target }) => {
             const newX = parseFloat(target.style.left)
             const newY = parseFloat(target.style.top)

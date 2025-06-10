@@ -1,5 +1,6 @@
 import React from 'react'
 import { useWidgetStore } from '../store/useWidgetStore'
+
 import {
   TextCursorInput,
   SquareArrowOutUpRight,
@@ -11,6 +12,14 @@ import {
   FileText,
   Smartphone,
   PanelBottom,
+  ToggleRight,
+  SlidersHorizontal,
+  ListStart,
+  CircleDot,
+  CreditCard,
+  PanelTopClose,
+  FolderGit2,
+  LayoutDashboard,
 } from 'lucide-react'
 
 export default function WidgetPanel() {
@@ -28,8 +37,17 @@ export default function WidgetPanel() {
     form: <FileText size={26} />,
     appbar: <Smartphone size={26} />,
     bottomnav: <PanelBottom size={26} />,
+    switch: <ToggleRight size={26} />,
+    slider: <SlidersHorizontal size={26} />,
+    dropdown: <ListStart size={26} />,
+    radio: <CircleDot size={26} />,
+    card: <CreditCard size={26} />,
+    panel: <PanelTopClose size={26} />,
+    tabs: <FolderGit2 size={26} />,
+    calendar: <CircleDot size={26} />, 
+    drawer: <LayoutDashboard size={26} />,
   }
-
+  
   return (
     <div className="bg-[#0f172a] text-white border-r border-[#53eafd33]
                     lg:w-64 w-fit

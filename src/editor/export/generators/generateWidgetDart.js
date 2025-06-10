@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-escape */
 /* eslint-disable no-case-declarations */
 import { capitalize } from './utils.js';
 
@@ -303,8 +304,171 @@ export function generateWidgetDart(widget) {
         ),
       ),
     ),
-  )`;
-  
+    )`;
+    case 'switch':
+      return `Positioned(
+        left: ${x}, top: ${y},${transform}
+        child: Row(
+          children: [
+            Text('Switch'),
+            Switch(
+              value: ${widget.checked ?? false},
+              onChanged: (value) {},
+              activeColor: ${toColor(widget.color)},
+            ),
+          ],
+        ),
+      )`;
+      case 'slider':
+        return `Positioned(
+          left: ${x}, top: ${y},${transform}
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Valor: \${${widget.value ?? 50}}'),
+              Slider(
+                value: ${widget.value ?? 50}.toDouble(),
+                min: ${widget.min ?? 0}.toDouble(),
+                max: ${widget.max ?? 100}.toDouble(),
+                onChanged: (value) {},
+                activeColor: Colors.blue,
+              ),
+            ],
+          ),
+        )`;
+        case 'radio':
+          return `Positioned(
+            left: ${x}, top: ${y},${transform}
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: ${JSON.stringify(widget.options || ['Opción A', 'Opción B'])}.map((option) {
+                return RadioListTile(
+                  title: Text(option),
+                  value: option,
+                  groupValue: '${widget.selected || widget.options?.[0] || ''}',
+                  onChanged: (value) {},
+                );
+              }).toList(),
+            ),
+          )`;
+          case 'card':
+            return `Positioned(
+              left: ${x}, top: ${y},${transform}
+              child: Card(
+                elevation: ${widget.elevation ? 4 : 0},
+                color: ${toColor(widget.color)},
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(${widget.borderRadius || 8}),
+                ),
+                child: SizedBox(
+                  width: ${widget.width || 200},
+                  height: ${widget.height || 120},
+                  child: Padding(
+                    padding: EdgeInsets.all(12),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Título de Card'),
+                        SizedBox(height: 8),
+                        Text('Contenido dentro del Card'),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            )`;
+            case 'tabs':
+              return `Positioned(
+                left: ${x}, top: ${y},${transform}
+                child: DefaultTabController(
+                  length: ${widget.tabs?.length || 3},
+                  initialIndex: ${widget.selectedIndex || 0},
+                  child: Column(
+                    children: [
+                      TabBar(
+                        labelColor: Colors.blue,
+                        unselectedLabelColor: Colors.grey,
+                        tabs: ${JSON.stringify(widget.tabs || ['Tab 1', 'Tab 2'])}.map((label) => Tab(text: label)).toList(),
+                      ),
+                      Container(
+                        height: ${widget.height || 150} - 40,
+                        child: TabBarView(
+                          children: ${JSON.stringify(widget.tabs || ['Tab 1', 'Tab 2'])}.map((label) => Center(child: Text('Contenido de \$label'))).toList(),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              )`;
+              case 'calendar':
+                return `Positioned(
+                  left: ${x}, top: ${y},${transform}
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Fecha seleccionada: ${widget.selectedDate || '2025-06-10'}'),
+                      ElevatedButton(
+                        onPressed: () async {
+                          DateTime? picked = await showDatePicker(
+                            context: context,
+                            initialDate: DateTime.now(),
+                            firstDate: DateTime(2000),
+                            lastDate: DateTime(2100),
+                          );
+                        },
+                        child: Text('Seleccionar Fecha'),
+                      ),
+                    ],
+                  ),
+                )`;
+                case 'drawer':
+                  return `
+                drawer: Drawer(
+                  child: ListView(
+                    padding: EdgeInsets.zero,
+                    children: [
+                      DrawerHeader(
+                        decoration: BoxDecoration(color: Colors.blue),
+                        child: Text('Menú'),
+                      ),
+                      ${widget.items?.map(
+                        (item) => `ListTile(
+                        title: Text('${item}'),
+                        onTap: () {
+                          // Navigator.push...
+                        },
+                      )`
+                      ).join(',')}
+                    ],
+                  ),
+                ),`
+                
+                case 'panel':
+                  return `Positioned(
+                    left: ${x}, top: ${y},${transform}
+                    child: Container(
+                      width: ${widget.width || 260},
+                      height: ${widget.height || 180},
+                      decoration: BoxDecoration(
+                        color: ${toColor(widget.backgroundColor)},
+                        borderRadius: BorderRadius.circular(${widget.borderRadius || 8}),
+                        border: ${widget.border ? `Border.all(color: Colors.grey)` : 'null'},
+                      ),
+                      child: ${widget.scrollable ? 'SingleChildScrollView(' : ''}
+                        Padding(
+                          padding: EdgeInsets.all(8),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('Este es un panel'),
+                              SizedBox(height: 12),
+                              Text('Contenido de prueba...'),
+                            ],
+                          ),
+                        )
+                      ${widget.scrollable ? ')' : ''},
+                    ),
+                  )`;
       default:
         return `// Widget type '${widget.type}' not implemented yet`;
     }
