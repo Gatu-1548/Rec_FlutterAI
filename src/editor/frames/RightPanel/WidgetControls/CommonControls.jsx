@@ -46,7 +46,7 @@ export default function CommonControls({ widget, updateWidget, screenList = [] }
       </div>
 
       {/* Navegación condicional solo si el widget puede navegar */}
-      {['button', 'list', 'form'].includes(widget.type) && (
+      {['button', 'list', 'form', 'image', 'imput ', 'container'].includes(widget.type) && (
         <div className="space-y-2">
           <label className="block text-sm font-medium text-[#E2E8F0]">Navegar a:</label>
           <select

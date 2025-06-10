@@ -14,6 +14,9 @@ export default function MyEditor() {
   const screenList = [
     { id: 'pantalla1', name: 'Pantalla 1' },
     { id: 'pantalla2', name: 'Pantalla 2' },
+    { id: 'pantalla3', name: 'Pantalla 3' },
+    { id: 'pantalla4', name: 'Pantalla 4' },
+    { id: 'pantalla5', name: 'Pantalla 5' },
   ]
 
   return (

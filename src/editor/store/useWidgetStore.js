@@ -7,6 +7,9 @@ export const useWidgetStore = create((set) => ({
   widgets: {
     pantalla1: [],
     pantalla2: [],
+    pantalla3: [],
+    pantalla4: [],
+    pantalla5: [],
   },
 
   setCurrentScreen: (screenId) => set({ currentScreen: screenId }),

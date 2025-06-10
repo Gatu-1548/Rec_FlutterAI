@@ -1,8 +1,19 @@
-// src/editor/export/generators/generateScreenFile.js
 import { generateWidgetDart } from './generateWidgetDart.js'
 
 export function generateScreenFile(screenId, widgets) {
   const className = capitalize(screenId)
+
+  // Recolectar todas las pantallas a las que se navega desde esta
+  const uniqueDestinations = new Set(
+    widgets
+      .map(w => w.navigateTo)
+      .filter(dest => dest && dest.trim() !== '' && dest !== screenId)
+  )
+
+  //  Agregar imports solo para pantallas distintas a la actual
+  const importLines = Array.from(uniqueDestinations)
+    .map(dest => `import '${dest}.dart';`)
+    .join('\n')
 
   // AppBar y BottomNav si existen
   const appBarWidget = widgets.find(w => w.type === 'appbar')
@@ -10,19 +21,19 @@ export function generateScreenFile(screenId, widgets) {
 
   // Resto de widgets en Stack
   const hasAppBar = !!appBarWidget
-const offsetY = hasAppBar ? 72 : 0 
+  const offsetY = hasAppBar ? 72 : 0
 
-const positionedWidgets = widgets
-  .filter(w => w.type !== 'appbar' && w.type !== 'bottomnav')
-  .map(w => {
-    const adjusted = { ...w, y: (w.y ?? 0) - offsetY }
-    return generateWidgetDart(adjusted)
-  })
-  .join(',\n          ')
-
+  const positionedWidgets = widgets
+    .filter(w => w.type !== 'appbar' && w.type !== 'bottomnav')
+    .map(w => {
+      const adjusted = { ...w, y: (w.y ?? 0) - offsetY }
+      return generateWidgetDart(adjusted)
+    })
+    .join(',\n          ')
 
   return `
 import 'package:flutter/material.dart';
+${importLines}
 
 class ${className} extends StatelessWidget {
   const ${className}({super.key});
@@ -39,7 +50,6 @@ class ${className} extends StatelessWidget {
             ],
         ),
         ),
-
       ${bottomNavWidget ? `bottomNavigationBar: ${generateBottomNav(bottomNavWidget)},` : ''}
     );
   }
@@ -79,7 +89,7 @@ function generateBottomNav(widget) {
           BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Ajustes'),
         ],
         onTap: (index) {
-          // Todo:agregar navegación si deseas
+          // Todo: agregar navegación si deseas
         },
       )`
 }

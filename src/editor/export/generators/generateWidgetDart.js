@@ -1,4 +1,6 @@
 /* eslint-disable no-case-declarations */
+import { capitalize } from './utils.js';
+
 // src/editor/export/generators/generateWidgetDart.js
 
 export function generateWidgetDart(widget) {
@@ -14,6 +16,11 @@ export function generateWidgetDart(widget) {
     const transform = rotation !== 0
       ? `\n        transform: Matrix4.rotationZ(${rotation * (Math.PI / 180)}),`
       : '';
+
+    const generateNavigateTo = (navigateTo) => {
+      if (!navigateTo) return '';
+      return `Navigator.push(context, MaterialPageRoute(builder: (_) => ${capitalize(navigateTo)}()));`;
+    };
   
     switch (widget.type) {
       case 'text':
@@ -32,51 +39,73 @@ export function generateWidgetDart(widget) {
       case 'button':
         return `Positioned(
           left: ${widget.x || 0}, top: ${widget.y || 0},
-          child: ElevatedButton(
-            onPressed: () {},
-            style: ElevatedButton.styleFrom(
-              backgroundColor: ${toColor(widget.color)},
-              padding: EdgeInsets.symmetric(
-                horizontal: ${widget.paddingHorizontal || 16}, 
-                vertical: ${widget.paddingVertical || 8},
+          child: Builder(
+            builder: (context) => ElevatedButton(
+              onPressed: () {
+                ${generateNavigateTo(widget.navigateTo)}
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: ${toColor(widget.color)},
+                padding: EdgeInsets.symmetric(
+                  horizontal: ${widget.paddingHorizontal || 16}, 
+                  vertical: ${widget.paddingVertical || 8},
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(${widget.borderRadius || 8}),
+                ),
               ),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(${widget.borderRadius || 8}),
-              ),
-            ),
-            child: Text(
-              '${widget.text || 'Button'}',
-              style: TextStyle(
-                color: ${toColor(widget.textColor)},
-                fontSize: ${widget.fontSize || 14},
+              child: Text(
+                '${widget.text || 'Button'}',
+                style: TextStyle(
+                  color: ${toColor(widget.textColor)},
+                  fontSize: ${widget.fontSize || 14},
+                ),
               ),
             ),
           ),
         )`;
   
       case 'image':
+        const imageOnTap = widget.navigateTo 
+          ? `onTap: () {
+              ${generateNavigateTo(widget.navigateTo)}
+            },`
+          : '';
+        
         return `Positioned(
           left: ${x}, top: ${y},${transform}
-          child: SizedBox(
-            width: ${widget.width || 100},
-            height: ${widget.height || 100},
-            child: Image.network(
-              '${widget.src || 'https://via.placeholder.com/100'}',
-              fit: BoxFit.${widget.fit || 'cover'},
+          child: GestureDetector(
+            ${imageOnTap}
+            child: SizedBox(
+              width: ${widget.width || 100},
+              height: ${widget.height || 100},
+              child: Image.network(
+                '${widget.src || 'https://via.placeholder.com/100'}',
+                fit: BoxFit.${widget.fit || 'cover'},
+              ),
             ),
           ),
         )`;
   
       case 'container':
+        const containerOnTap = widget.navigateTo 
+          ? `onTap: () {
+              ${generateNavigateTo(widget.navigateTo)}
+            },`
+          : '';
+        
         return `Positioned(
           left: ${x}, top: ${y},${transform}
-          child: Container(
-            width: ${widget.width || 200},
-            height: ${widget.height || 150},
-            decoration: BoxDecoration(
-              color: ${toColor(widget.color)},
-              borderRadius: BorderRadius.circular(${widget.borderRadius || 8}),
-              boxShadow: ${widget.shadow ? `[BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 4, offset: Offset(0, 2))]` : '[]'},
+          child: GestureDetector(
+            ${containerOnTap}
+            child: Container(
+              width: ${widget.width || 200},
+              height: ${widget.height || 150},
+              decoration: BoxDecoration(
+                color: ${toColor(widget.color)},
+                borderRadius: BorderRadius.circular(${widget.borderRadius || 8}),
+                boxShadow: ${widget.shadow ? `[BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 4, offset: Offset(0, 2))]` : '[]'},
+              ),
             ),
           ),
         )`;
@@ -131,6 +160,9 @@ export function generateWidgetDart(widget) {
       case 'list':
         const items = (widget.items || []).map(item => `
           ListTile(
+            onTap: () {
+              ${generateNavigateTo(widget.navigateTo)}
+            },
             title: Text(
               '${item}',
               style: TextStyle(
@@ -156,6 +188,12 @@ export function generateWidgetDart(widget) {
         )`;
   
       case 'form':
+        const formButtonOnPressed = widget.navigateTo 
+          ? `onPressed: () {
+              ${generateNavigateTo(widget.navigateTo)}
+            },`
+          : 'onPressed: () {},';
+        
         return `Positioned(
           left: ${x}, top: ${y},${transform}
           child: Container(
@@ -186,7 +224,7 @@ export function generateWidgetDart(widget) {
                 ),
                 SizedBox(height: 12),
                 ElevatedButton(
-                  onPressed: () {},
+                  ${formButtonOnPressed}
                   style: ElevatedButton.styleFrom(
                     backgroundColor: ${toColor(widget.buttonColor)},
                   ),
@@ -198,17 +236,43 @@ export function generateWidgetDart(widget) {
         )`;
   
       case 'appbar':
+        const appBarActions = widget.showActions 
+          ? `actions: [
+              IconButton(
+                icon: Icon(Icons.search), 
+                onPressed: () {
+                  ${generateNavigateTo(widget.navigateTo)}
+                },
+              ),
+              IconButton(
+                icon: Icon(Icons.more_vert), 
+                onPressed: () {
+                  ${generateNavigateTo(widget.navigateTo)}
+                },
+              )
+            ]`
+          : 'actions: []';
+        
         return `AppBar(
           title: Text('${widget.text || 'App Title'}'),
           backgroundColor: ${toColor(widget.backgroundColor)},
           foregroundColor: ${toColor(widget.textColor)},
           elevation: ${widget.elevation ? 4 : 0},
           automaticallyImplyLeading: ${widget.showBackButton ?? false},
-          actions: ${widget.showActions ? `[IconButton(icon: Icon(Icons.search), onPressed: () {}), IconButton(icon: Icon(Icons.more_vert), onPressed: () {})]` : '[]'},
+          ${appBarActions},
         )`;
   
       case 'bottomnav':
+        const bottomNavOnTap = widget.navigateTo 
+          ? `onTap: (index) {
+              if (index == ${widget.defaultActive || 0}) {
+                ${generateNavigateTo(widget.navigateTo)}
+              }
+            },`
+          : '';
+        
         return `BottomNavigationBar(
+          ${bottomNavOnTap}
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Inicio'),
             BottomNavigationBarItem(icon: Icon(Icons.bar_chart), label: 'Stats'),
@@ -225,5 +289,4 @@ export function generateWidgetDart(widget) {
       default:
         return `// Widget type '${widget.type}' not implemented yet`;
     }
-  }
-  
+}
