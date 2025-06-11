@@ -121,6 +121,70 @@ export const useWidgetStore = create((set) => ({
           customItems: null,
           navigateTo: '', 
         },
+        switch: {
+          checked: false,
+          color: '#3b82f6',
+          navigateTo: '',
+        },
+        
+        slider: {
+          value: 50,
+          min: 0,
+          max: 100,
+          navigateTo: '',
+        },
+        
+        dropdown: {
+          items: ['Opción 1', 'Opción 2', 'Opción 3'],
+          value: 'Opción 1',
+          navigateTo: '',
+        },
+        
+        radio: {
+          options: ['Opción A', 'Opción B', 'Opción C'],
+          selected: 'Opción A',
+          navigateTo: '',
+        },
+        
+        card: {
+          width: 200,
+          height: 120,
+          color: '#ffffff',
+          borderRadius: 8,
+          elevation: true,
+          navigateTo: '',
+        },
+        
+        tabs: {
+          tabs: ['Tab 1', 'Tab 2', 'Tab 3'],
+          selectedIndex: 0,
+          width: 260,
+          height: 150,
+          navigateTo: '',
+        },
+        
+        calendar: {
+          selectedDate: '',
+          width: 240,
+          navigateTo: '',
+        },
+        
+        panel: {
+          width: 260,
+          height: 180,
+          backgroundColor: '#f9fafb',
+          border: true,
+          borderRadius: 8,
+          scrollable: true,
+          navigateTo: '',
+        },
+        drawer: {
+          width: 200,
+          height: 300,
+          items: ['Home', 'Profile', 'Settings', 'Logout'],
+          navigateTo: '',
+        },        
+        
       }
 
       const newWidget = {

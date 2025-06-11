@@ -15,6 +15,14 @@ import FormControls from './WidgetControls/FormControls'
 import { AppbarControls } from './WidgetControls/AppbarControls'
 import { BottomnavControls } from './WidgetControls/BottomnavControls'
 import { PanelRightClose, PanelRightOpen, ChevronLeft } from 'lucide-react'
+import CalendarControls from './WidgetControls/CalendarPickerControls'
+import DropdownControls from './WidgetControls/DropdownControls'
+import SliderControls from './WidgetControls/SliderControls'
+import RadioControls from './WidgetControls/RadioControls'
+import CardControls from './WidgetControls/CardControls'
+import PanelControls from './WidgetControls/FlutterPanelControls'
+import TabsControls from './WidgetControls/TabsControls'
+import SwitchControls from './WidgetControls/SwitchControls'
 
 export default function RightPanel({ screenList = [] }) {
   const selectedId = useWidgetStore((s) => s.selectedId)
@@ -95,6 +103,14 @@ export default function RightPanel({ screenList = [] }) {
           {widget?.type === 'form' && <FormControls widget={widget} updateWidget={updateSelectedWidget} />}
           {widget?.type === 'appbar' && <AppbarControls widget={widget} updateWidget={updateSelectedWidget} />}
           {widget?.type === 'bottomnav' && <BottomnavControls widget={widget} updateWidget={updateSelectedWidget} />}
+          {widget?.type === 'calendar' && <CalendarControls widget={widget} updateWidget={updateSelectedWidget} />}
+          {widget?.type === 'dropdown' && <DropdownControls widget={widget} updateWidget={updateSelectedWidget} />}
+          {widget?.type === 'slider' && <SliderControls widget={widget} updateWidget={updateSelectedWidget} />}
+          {widget?.type === 'radio' && <RadioControls widget={widget} updateWidget={updateSelectedWidget} />}
+          {widget?.type === 'card' && <CardControls widget={widget} updateWidget={updateSelectedWidget} />}
+          {widget?.type === 'panel' && <PanelControls widget={widget} updateWidget={updateSelectedWidget} />}
+          {widget?.type === 'tabs' && <TabsControls widget={widget} updateWidget={updateSelectedWidget} />}
+          {widget?.type === 'switch' && <SwitchControls widget={widget} updateWidget={updateSelectedWidget} />}
         </div>
       </div>
     </div>
