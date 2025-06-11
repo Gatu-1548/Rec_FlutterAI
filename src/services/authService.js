@@ -12,7 +12,7 @@ export const loginUser = async (email, password) => {
     throw new Error('Error de login');
   }
 };
-
+ 
 // Registro
 export const registerUser = async (firstName, lastName, email, gender, password) => {
   try {
