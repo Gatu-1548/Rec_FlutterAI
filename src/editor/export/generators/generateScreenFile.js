@@ -94,10 +94,36 @@ function generateBottomNav(widget) {
       )`
 }
 
-function toColor(hex) {
-  return `Color(0xFF${hex.replace('#', '')})`
-}
+// function toColor(hex) {
+//   return `Color(0xFF${hex.replace('#', '')})`
+// }
+function toColor(hexOrName) {
+  const namedColors = {
+    blue: '2196F3',
+    green: '4CAF50',
+    red: 'F44336',
+    black: '000000',
+    white: 'FFFFFF',
+    gray: '9E9E9E',
+    yellow: 'FFEB3B',
+    orange: 'FF9800',
+    purple: '9C27B0',
+    teal: '009688'
+  }
 
+  // Si es color con #
+  if (hexOrName?.startsWith('#')) {
+    return `Color(0xFF${hexOrName.slice(1)})`;
+  }
+
+  // Si es un color por nombre reconocido
+  if (namedColors[hexOrName?.toLowerCase()]) {
+    return `Color(0xFF${namedColors[hexOrName.toLowerCase()]})`;
+  }
+
+  // Por defecto, color negro
+  return `Color(0xFF000000)`;
+}
 function capitalize(str) {
   return str ? str.charAt(0).toUpperCase() + str.slice(1) : ''
 }

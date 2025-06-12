@@ -111,10 +111,43 @@ export const generateUIFromImage = async (file) => {
 
 
 export const generateUIFromPrompt = async (prompt) => {
+const fullPrompt = `
+Genera una estructura de UI Flutter para un editor visual.
+
+✅ Formato JSON esperado:
+{
+  "pantalla1": [ /* array de widgets */ ],
+  "pantalla2": [ /* ... */ ],
+  "pantalla3": [],
+  "pantalla4": [],
+  "pantalla5": []
+}
+
+✅ Cada widget debe incluir al menos:
+- id: string único
+- type: text | button | input | image | container | form | checkbox | appbar | bottomnav | list | card | dropdown | switch | slider | radio | calendar | panel | tabs | drawer
+- x, y: posición (números)
+- y los atributos necesarios según el tipo (ej: text, color, fontSize, placeholder, navigateTo, etc.)
+
+⚠️ IMPORTANTE:
+- Máximo 5 pantallas
+- No devuelvas explicaciones, solo el objeto JSON
+- No uses comentarios ni texto adicional
+
+🎨 Estilo visual requerido:
+- Asegúrate de incluir el atributo "color", "backgroundColor" o "textColor" en todos los widgets visuales.
+- Usa colores claros por defecto para evitar fondos negros no intencionales.
+- Ejemplos: "#ffffff", "#f3f4f6", "#e5e7eb" para contenedores e inputs. "#000000" para textos.
+- No dejes campos de color vacíos o sin definir.
+- Asegúrate de que todos los colores generen buen contraste visual.
+
+Texto del usuario: "${prompt}"
+`;
+
   try {
     const response = await axios.post(`${API_URL}generate-ui`, {
       mode: 'prompt',
-      data: prompt,
+      data: fullPrompt,
     });
     return response.data.code;
   } catch (error) {

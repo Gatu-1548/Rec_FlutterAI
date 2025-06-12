@@ -9,10 +9,39 @@ export function generateWidgetDart(widget) {
     const y = widget.y ?? 0;
     const rotation = widget.rotation ?? 0;
   
-    const toColor = (hex) => {
-      const clean = (hex || '#000000').replace('#', '');
-      return `Color(0xFF${clean})`;
-    };
+    // const toColor = (hex) => {
+    //   const clean = (hex || '#000000').replace('#', '');
+    //   return `Color(0xFF${clean})`;
+    // };
+
+    const toColor = (hexOrName) => {
+  const namedColors = {
+    blue: '2196F3',
+    green: '4CAF50',
+    red: 'F44336',
+    black: '000000',
+    white: 'FFFFFF',
+    gray: '9E9E9E',
+    yellow: 'FFEB3B',
+    orange: 'FF9800',
+    purple: '9C27B0',
+    teal: '009688',
+  };
+
+  if (!hexOrName) return `Color(0xFF000000)`; // negro por defecto
+
+  const cleanInput = hexOrName.trim().toLowerCase();
+
+  if (cleanInput.startsWith('#')) {
+    return `Color(0xFF${cleanInput.slice(1)})`;
+  }
+
+  if (namedColors[cleanInput]) {
+    return `Color(0xFF${namedColors[cleanInput]})`;
+  }
+
+  return `Color(0xFF000000)`; // negro si no se reconoce
+};
   
     const transform = rotation !== 0
       ? `\n        transform: Matrix4.rotationZ(${rotation * (Math.PI / 180)}),`
@@ -103,7 +132,7 @@ export function generateWidgetDart(widget) {
               width: ${widget.width || 200},
               height: ${widget.height || 150},
               decoration: BoxDecoration(
-                color: ${toColor(widget.color)},
+                color: ${toColor(widget.backgroundColor || widget.color)},
                 borderRadius: BorderRadius.circular(${widget.borderRadius || 8}),
                 boxShadow: ${widget.shadow ? `[BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 4, offset: Offset(0, 2))]` : '[]'},
               ),
@@ -143,7 +172,7 @@ export function generateWidgetDart(widget) {
               decoration: InputDecoration(
                 hintText: '${widget.placeholder || ''}',
                 filled: true,
-                fillColor: ${toColor(widget.color)},
+                fillColor: ${toColor(widget.backgroundColor || widget.color || '#ffffff')},
                 border: OutlineInputBorder(),
                 contentPadding: EdgeInsets.symmetric(
                   horizontal: ${widget.paddingHorizontal || 12},
