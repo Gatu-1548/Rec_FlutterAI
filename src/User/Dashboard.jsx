@@ -52,7 +52,7 @@ const Dashboard = () => {
       {/* Encabezado */}
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl sm:text-3xl font-bold text-cyan-300">
-          Analizador de Diagramas de Clases
+          Generador de Interfaces
         </h1>
         <button
           onClick={handleLogout}
@@ -93,7 +93,7 @@ const Dashboard = () => {
                 : 'text-white/60 hover:text-cyan-200'
             }`}
           >
-            UML
+            PETICION
           </button>
         </div>
       </div>
