@@ -128,7 +128,7 @@ export default function MyEditor() {
       </div>
 
       {/* Modal para guardar/cargar proyectos */}
-      // En tu editor principal, reemplaza el ProjectModal con:
+    
         <ProjectManagerModal
           isOpen={projectModalOpen}
           mode={projectMode}
