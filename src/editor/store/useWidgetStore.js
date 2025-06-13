@@ -120,7 +120,7 @@ export const useWidgetStore = create((set, get) => ({
     const oldSerialized = JSON.stringify(state.widgets)
     const newSerialized = JSON.stringify(newWidgets)
 
-    if (oldSerialized === newSerialized) return // No actualizar ni emitir
+    if (oldSerialized === newSerialized) return 
 
     if (state.currentRoom) {
       socket.emit('widgetsChange', { roomName: state.currentRoom, widgets: newWidgets })

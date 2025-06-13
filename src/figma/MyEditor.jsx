@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { socket } from './socketService'
 import WidgetPanel from '../editor/frames/WidgetPanel'
@@ -9,12 +9,17 @@ import RightPanel from '../editor/frames/RightPanel/index'
 import { exportToFlutterCode } from '../editor/export/flutterExporter'
 import { useCanvasStore } from '../editor/store/useCanvasStore'
 import { useWidgetStore } from '../editor/store/useWidgetStore'
+import ProjectManagerModal from '../figma/ProjectModal'
 
 export default function MyEditor() {
   const currentScreen = useWidgetStore((state) => state.currentScreen)
   const setWidgets = useWidgetStore((state) => state.setWidgets)
   const setCurrentRoom = useWidgetStore((state) => state.setCurrentRoom)
   const setCanvasSize = useCanvasStore((state) => state.setCanvasSize)
+  const widgets = useWidgetStore((state) => state.widgets)
+
+  const [projectModalOpen, setProjectModalOpen] = useState(false)
+  const [projectMode, setProjectMode] = useState('save')
 
   const { roomName } = useParams()
 
@@ -26,7 +31,7 @@ export default function MyEditor() {
     { id: 'pantalla5', name: 'Pantalla 5' },
   ]
 
-  // ✅ Unirse a la sala cuando entra
+  // Unirse a la sala cuando entra
   useEffect(() => {
     if (roomName) {
       setCurrentRoom(roomName)
@@ -35,7 +40,7 @@ export default function MyEditor() {
     }
   }, [roomName])
 
-  // ✅ Recibir cambios de otros usuarios
+  // Recibir cambios de otros usuarios
   useEffect(() => {
     const handleReceive = ({ widgets: newWidgets }) => {
       console.log('🟡 Widgets recibidos desde socket:', newWidgets)
@@ -70,12 +75,43 @@ export default function MyEditor() {
           </div>
         </div>
 
-        <button
-          onClick={exportToFlutterCode}
-          className="bg-[#53EAFD] text-[#0f172a] px-4 py-2 rounded-lg hover:bg-[#3bdaf0] transition-all duration-200 shadow font-medium"
-        >
-          Exportar código Flutter
-        </button>
+        <div className="flex flex-wrap items-center gap-2">
+          <button
+            onClick={exportToFlutterCode}
+            className="bg-[#53EAFD] hover:bg-[#3bdaf0] text-[#0f172a] px-4 py-2 rounded-lg transition-all duration-200 shadow font-semibold flex items-center gap-1"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clipRule="evenodd" />
+            </svg>
+            Exportar Flutter
+          </button>
+
+          <button
+            onClick={() => {
+              setProjectMode('save')
+              setProjectModalOpen(true)
+            }}
+            className="bg-[#34D399] hover:bg-[#2ecf83] text-[#0f172a] px-4 py-2 rounded-lg transition-all duration-200 shadow font-semibold flex items-center gap-1"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path d="M7.707 10.293a1 1 0 10-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 11.586V6h5a2 2 0 012 2v7a2 2 0 01-2 2H4a2 2 0 01-2-2V8a2 2 0 012-2h5v5.586l-1.293-1.293zM9 4a1 1 0 012 0v2H9V4z" />
+            </svg>
+            Guardar
+          </button>
+
+          <button
+            onClick={() => {
+              setProjectMode('load')
+              setProjectModalOpen(true)
+            }}
+            className="bg-[#FBBF24] hover:bg-[#facc15] text-[#0f172a] px-4 py-2 rounded-lg transition-all duration-200 shadow font-semibold flex items-center gap-1"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clipRule="evenodd" />
+            </svg>
+            Cargar
+          </button>
+        </div>
       </div>
 
       {/* 📐 Área principal */}
@@ -90,6 +126,28 @@ export default function MyEditor() {
 
         <RightPanel screenList={screenList} />
       </div>
+
+      {/* Modal para guardar/cargar proyectos */}
+      // En tu editor principal, reemplaza el ProjectModal con:
+        <ProjectManagerModal
+          isOpen={projectModalOpen}
+          mode={projectMode}
+          onClose={() => setProjectModalOpen(false)}
+          onSave={(name) => {
+            const all = JSON.parse(localStorage.getItem('projects') || '{}')
+            all[name] = widgets
+            localStorage.setItem('projects', JSON.stringify(all))
+          }}
+          onLoad={(name) => {
+            const all = JSON.parse(localStorage.getItem('projects') || '{}')
+            if (all[name]) {
+              setWidgets(all[name])
+              if (roomName) {
+                socket.emit('widgetsChange', { roomName, widgets: all[name] })
+              }
+            }
+          }}
+        />
     </div>
   )
 }
