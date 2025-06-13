@@ -22,7 +22,8 @@ import FlutterTabs from '../components/FlutterTabs'
 import FlutterDrawer from '../components/FlutterDrawer'
 
 export default function CanvasPhone({ screenId }) {
-  const widgets = useWidgetStore((state) => state.widgets[screenId] || [])
+  const allWidgets = useWidgetStore((state) => state.widgets)
+  const widgets = allWidgets[screenId] || [] // Esta línea asegura reactividad completa
   const setSelectedId = useWidgetStore((state) => state.setSelectedId)
   const { width, height } = useCanvasStore((state) => state.canvasSize)
 
@@ -68,7 +69,6 @@ export default function CanvasPhone({ screenId }) {
             if (widget.type === 'slider') return <FlutterSlider key={widget.id} id={widget.id} />
             if (widget.type === 'tabs') return <FlutterTabs key={widget.id} id={widget.id} />
             if (widget.type === 'drawer') return <FlutterDrawer key={widget.id} id={widget.id} />
-
             return null
           })}
         </div>
