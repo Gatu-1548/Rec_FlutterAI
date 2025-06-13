@@ -11,7 +11,7 @@ export const socket = io('https://backendrecognit-production.up.railway.app');
 // Opcional: escuchamos cuando se conecta
 socket.on('connect', () => {
   console.log('✅ Socket conectado al servidor');
-});
+}); 
 
 
 
