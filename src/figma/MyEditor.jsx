@@ -60,7 +60,7 @@ export default function MyEditor() {
           <div className="relative">
             <select
               onChange={(e) => setCanvasSize(e.target.value)}
-              defaultValue="medium"
+              defaultValue="small"
               className="appearance-none bg-[#1e293b] border border-[#53eafd33] rounded-lg px-4 py-2 pr-8 text-sm font-medium text-white hover:border-[#53EAFD] focus:outline-none focus:ring-2 focus:ring-[#53EAFD] focus:border-transparent transition-all duration-200 cursor-pointer"
             >
               <option value="small">Chico (360x800)</option>
