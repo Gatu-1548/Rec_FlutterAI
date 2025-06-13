@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useState } from 'react';
 import { generateUIFromPrompt } from '../services/authService';
 import { useWidgetStore } from '../editor/store/useWidgetStore';
