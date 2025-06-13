@@ -35,8 +35,8 @@ const Dashboard = () => {
     if (roomInput.trim() !== '') {
       // Redirigir a la sala
      // navigate(`/room/${roomInput}`);
-      window.open(`/room/${roomInput}`, '_blank');
-      setIsModalOpen(false);
+     navigate(`/room/${roomInput}`);
+     setIsModalOpen(false);
       setRoomInput(''); // limpiar el input
     }
   };

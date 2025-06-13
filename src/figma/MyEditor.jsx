@@ -1,4 +1,7 @@
-import React from 'react'
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect } from 'react'
+import { useParams } from 'react-router-dom'
+import { socket } from './socketService'
 import WidgetPanel from '../editor/frames/WidgetPanel'
 import ScreenTabs from '../editor/frames/ScreenTabs'
 import CanvasPhone from '../editor/canvas/CanvasPhone'
@@ -9,7 +12,11 @@ import { useWidgetStore } from '../editor/store/useWidgetStore'
 
 export default function MyEditor() {
   const currentScreen = useWidgetStore((state) => state.currentScreen)
+  const setWidgets = useWidgetStore((state) => state.setWidgets)
+  const setCurrentRoom = useWidgetStore((state) => state.setCurrentRoom)
   const setCanvasSize = useCanvasStore((state) => state.setCanvasSize)
+
+  const { roomName } = useParams()
 
   const screenList = [
     { id: 'pantalla1', name: 'Pantalla 1' },
@@ -19,13 +26,32 @@ export default function MyEditor() {
     { id: 'pantalla5', name: 'Pantalla 5' },
   ]
 
+  // ✅ Unirse a la sala cuando entra
+  useEffect(() => {
+    if (roomName) {
+      setCurrentRoom(roomName)
+      socket.emit('joinRoom', roomName)
+      console.log(`🟢 Te has unido a la sala: ${roomName}`)
+    }
+  }, [roomName])
+
+  // ✅ Recibir cambios de otros usuarios
+  useEffect(() => {
+    const handleReceive = ({ widgets: newWidgets }) => {
+      console.log('🟡 Widgets recibidos desde socket:', newWidgets)
+      if (newWidgets) setWidgets(newWidgets)
+    }
+
+    socket.on('receiveWidgets', handleReceive)
+    return () => socket.off('receiveWidgets', handleReceive)
+  }, [roomName])
+
   return (
     <div className="flex flex-col h-screen bg-[#1A263A] text-white">
-      {/* Top bar */}
+      {/* 🔝 Top bar */}
       <div className="flex flex-wrap justify-between items-center px-4 py-3 bg-[#0f172a] border-b border-[#53eafd33] shadow-md">
         <div className="flex flex-wrap items-center gap-4">
           <ScreenTabs screenList={screenList} />
-  
           <div className="relative">
             <select
               onChange={(e) => setCanvasSize(e.target.value)}
@@ -43,7 +69,7 @@ export default function MyEditor() {
             </div>
           </div>
         </div>
-  
+
         <button
           onClick={exportToFlutterCode}
           className="bg-[#53EAFD] text-[#0f172a] px-4 py-2 rounded-lg hover:bg-[#3bdaf0] transition-all duration-200 shadow font-medium"
@@ -51,20 +77,19 @@ export default function MyEditor() {
           Exportar código Flutter
         </button>
       </div>
-  
+
+      {/* 📐 Área principal */}
       <div className="flex flex-1 overflow-hidden">
         <div className="w-20 md:w-64 flex-shrink-0 bg-[#0F172A] overflow-y-auto border-r border-white/5">
           <WidgetPanel />
         </div>
-  
+
         <div className="flex-1 overflow-auto min-w-0 bg-[#1A263A]">
           <CanvasPhone screenId={currentScreen} />
         </div>
-  
-        <RightPanel screenList={screenList} />
 
+        <RightPanel screenList={screenList} />
       </div>
     </div>
   )
-  
 }
